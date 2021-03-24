@@ -8,12 +8,17 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let book of books; index as i">
+    <tr *ngFor="let book of books; index as i"
+        (click)="selectBook(book)"
+        [class.table-primary]="book === selectedBook">
       <th scope="row">{{i + 1}}</th>
       <td>{{book.author}}</td>
       <td>{{book.title}}</td>
     </tr>
     </tbody>
   </table>
-  <ba-book-details class="col"></ba-book-details>
+  <ba-book-details *ngIf="selectedBook"
+                   [book]="selectedBook"
+                   (bookChange)="updateBook($event)"
+                   class="col"></ba-book-details>
 </div>
