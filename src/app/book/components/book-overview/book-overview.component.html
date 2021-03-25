@@ -12,6 +12,7 @@
         *ngFor="let book of books$ | async; index as i"
         (click)="selectBook(book)"
         [class.table-primary]="book === selectedBook"
+        class="my-row"
       >
         <th scope="row">{{ i + 1 }}</th>
         <td>{{ book.author | uppercase }}</td>
@@ -19,10 +20,5 @@
       </tr>
     </tbody>
   </table>
-  <ba-book-details
-    *ngIf="selectedBook"
-    [book]="selectedBook"
-    (bookChange)="updateBook($event)"
-    class="col"
-  ></ba-book-details>
+  <router-outlet class="col"></router-outlet>
 </div>

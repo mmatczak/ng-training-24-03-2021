@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HelperService } from './helper.service';
 import { Book } from '../model/book';
 
@@ -29,17 +29,16 @@ export class BookService {
     return this.booksSubject;
   }
 
-  updateBook(updatedBook: Book): void{
-    this.booksSubject.next(this.books.map(book => book.id === updatedBook.id ? updatedBook : book));
+  getBook(bookId: number): Book | undefined{
+    return this.books.find(book=>book.id === bookId);
   }
 
-  getBooksClassic(): Book[]{
-    const meaningOfLife = this.helperService.getMeaningOfLife(2);
-    console.log(meaningOfLife);
-    return this.books;
-   }
+  getBookObservable(bookId: number): Observable<Book|undefined>{
+    return of(this.books.find(book=>book.id === bookId));
+  }
 
-  updateBookClassic(updatedBook: Book){
+  updateBook(updatedBook: Book): void{
     this.books = this.books.map(book => book.id === updatedBook.id ? updatedBook : book);
+    this.booksSubject.next(this.books);
   }
 }

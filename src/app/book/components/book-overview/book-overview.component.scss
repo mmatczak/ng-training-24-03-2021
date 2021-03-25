@@ -1,3 +1,11 @@
 :host {
   display: block;
 }
+
+.my-row {
+  cursor: pointer;
+}
+
+.my-row:hover {
+  background-color: #fefefe;
+}

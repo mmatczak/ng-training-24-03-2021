@@ -3,6 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import {Book, ExtendedBook} from '../../model/book';
 import { BookService } from '../../services/book.service';
 import { filter, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ba-book-overview',
@@ -15,7 +16,7 @@ export class BookOverviewComponent implements OnInit{
   selectedBook: Book | undefined;
 
 
-  constructor(private booksService: BookService) {}
+  constructor(private booksService: BookService, private router: Router) {}
 
   ngOnInit(): void {
     this.books$ = this.booksService.getBooks()
@@ -23,6 +24,7 @@ export class BookOverviewComponent implements OnInit{
 
   selectBook(book: Book): void {
     this.selectedBook = book;
+    this.router.navigate(['books','details',book.id])
   }
 
   updateBook(updatedBook: Book): void {

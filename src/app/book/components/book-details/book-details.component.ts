@@ -1,4 +1,7 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import {Book} from '../../model/book';
 import { BookService } from '../../services/book.service';
 
@@ -9,13 +12,19 @@ import { BookService } from '../../services/book.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookDetailsComponent {
-  @Input()
-  book: Book | undefined;
 
-  @Output()
-  bookChange: EventEmitter<Book> = new EventEmitter<Book>();
+  book$: Observable<Book|undefined>;
+  private bookId: number|undefined;
 
-  constructor(private booksService: BookService){}
+  constructor(private booksService: BookService, private route: ActivatedRoute){
+    this.book$ = this.route.params.pipe(
+      switchMap((params: Params)=>{
+        this.bookId = +params.id;
+        return this.booksService.getBookObservable(+params.id)
+      })
+    )
+  }
+
 
   save(event: Event): void {
     event.preventDefault();
@@ -25,7 +34,7 @@ export class BookDetailsComponent {
     const titleInput = form.querySelector<HTMLInputElement>('input#title');
     const title = titleInput?.value || '';
     const updatedBook: Book = {
-      id: this.book?.id,
+      id: this.bookId,
       author, title
     };
     this.booksService.updateBook(updatedBook);

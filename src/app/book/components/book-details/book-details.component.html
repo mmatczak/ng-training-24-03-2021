@@ -1,12 +1,11 @@
-<form (submit)="save($event)">
+<form (submit)="save($event)" *ngIf="book$ | async as book">
   <div class="form-group">
     <label for="author">Author</label>
-    <input [value]="book?.author"
-           class="form-control" id="author">
+    <input [value]="book?.author" class="form-control" id="author" />
   </div>
   <div class="form-group">
     <label for="title">Title</label>
-    <input [value]="book?.title" class="form-control" id="title">
+    <input [value]="book?.title" class="form-control" id="title" />
   </div>
   <button class="btn btn-primary">Save</button>
 </form>

@@ -1,8 +1,14 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import { Route, RouterModule } from '@angular/router';
 
 import {AppComponent} from './app.component';
-import {BookModule} from './book/book.module';
+import { BookOverviewComponent } from './book/components/book-overview/book-overview.component';
+
+const routes: Route[] = [
+  {path: '', redirectTo: "books", pathMatch: 'full'},
+  {path:'books', loadChildren: () => import('./book/book.module').then(m=>m.BookModule)}
+]
 
 @NgModule({
   declarations: [
@@ -10,7 +16,7 @@ import {BookModule} from './book/book.module';
   ],
   imports: [
     BrowserModule,
-    BookModule
+    RouterModule.forRoot(routes)
   ],
   providers: [],
   bootstrap: [AppComponent]
