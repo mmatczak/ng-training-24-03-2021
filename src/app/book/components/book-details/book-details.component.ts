@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Book} from '../../model/book';
+import { BookService } from '../../services/book.service';
 
 @Component({
   selector: 'ba-book-details',
@@ -14,6 +15,8 @@ export class BookDetailsComponent {
   @Output()
   bookChange: EventEmitter<Book> = new EventEmitter<Book>();
 
+  constructor(private booksService: BookService){}
+
   save(event: Event): void {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
@@ -25,6 +28,6 @@ export class BookDetailsComponent {
       id: this.book?.id,
       author, title
     };
-    this.bookChange.emit(updatedBook);
+    this.booksService.updateBook(updatedBook);
   }
 }

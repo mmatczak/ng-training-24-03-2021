@@ -1,24 +1,28 @@
 <div class="row">
   <table class="table col-8">
     <thead class="thead-dark">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Author</th>
-      <th scope="col">Title</th>
-    </tr>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Author</th>
+        <th scope="col">Title</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let book of books; index as i"
+      <tr
+        *ngFor="let book of books$ | async; index as i"
         (click)="selectBook(book)"
-        [class.table-primary]="book === selectedBook">
-      <th scope="row">{{i + 1}}</th>
-      <td>{{book.author}}</td>
-      <td>{{book.title}}</td>
-    </tr>
+        [class.table-primary]="book === selectedBook"
+      >
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ book.author | uppercase }}</td>
+        <td>{{ book.title | lowercase }}</td>
+      </tr>
     </tbody>
   </table>
-  <ba-book-details *ngIf="selectedBook"
-                   [book]="selectedBook"
-                   (bookChange)="updateBook($event)"
-                   class="col"></ba-book-details>
+  <ba-book-details
+    *ngIf="selectedBook"
+    [book]="selectedBook"
+    (bookChange)="updateBook($event)"
+    class="col"
+  ></ba-book-details>
 </div>

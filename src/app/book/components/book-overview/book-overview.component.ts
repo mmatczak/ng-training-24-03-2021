@@ -1,29 +1,24 @@
-import {Component} from '@angular/core';
-import {Book} from '../../model/book';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import {Book, ExtendedBook} from '../../model/book';
+import { BookService } from '../../services/book.service';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'ba-book-overview',
   templateUrl: './book-overview.component.html',
   styleUrls: ['./book-overview.component.scss']
 })
-export class BookOverviewComponent {
-  books: Book[];
+export class BookOverviewComponent implements OnInit{
+
+  books$: Observable<Book[]> | undefined;
   selectedBook: Book | undefined;
 
-  constructor() {
-    this.books = [{
-      id: 0,
-      author: 'Marek Matczak',
-      title: 'Angular for nerds'
-    }, {
-      id: 1,
-      author: 'Douglas Crockford',
-      title: 'JavaScript. The Good Parts'
-    }, {
-      id: 2,
-      author: 'John Example',
-      title: 'TypeScript for newbies'
-    }];
+
+  constructor(private booksService: BookService) {}
+
+  ngOnInit(): void {
+    this.books$ = this.booksService.getBooks()
   }
 
   selectBook(book: Book): void {
@@ -31,7 +26,8 @@ export class BookOverviewComponent {
   }
 
   updateBook(updatedBook: Book): void {
-    this.books = this.books.map(book => book.id === updatedBook.id ? updatedBook : book);
     this.selectedBook = updatedBook;
   }
+
+
 }
