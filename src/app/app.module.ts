@@ -3,6 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import { Route, RouterModule } from '@angular/router';
 
 import {AppComponent} from './app.component';
+import { BookModule } from './book/book.module';
 import { BookOverviewComponent } from './book/components/book-overview/book-overview.component';
 
 const routes: Route[] = [
@@ -16,6 +17,7 @@ const routes: Route[] = [
   ],
   imports: [
     BrowserModule,
+    // BookModule,
     RouterModule.forRoot(routes)
   ],
   providers: [],

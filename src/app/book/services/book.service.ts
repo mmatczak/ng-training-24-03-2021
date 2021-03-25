@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HelperService } from './helper.service';
 import { Book } from '../model/book';
+import { delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +34,8 @@ export class BookService {
     return this.books.find(book=>book.id === bookId);
   }
 
-  getBookObservable(bookId: number): Observable<Book|undefined>{
-    return of(this.books.find(book=>book.id === bookId));
+  getBookObservable(bookId: number): Observable<Book | undefined>{
+    return of(this.books.find(book=>book.id === bookId)).pipe(delay(3000));
   }
 
   updateBook(updatedBook: Book): void{
