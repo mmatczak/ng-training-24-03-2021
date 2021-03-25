@@ -35,9 +35,12 @@ describe('BookDetailsComponent', () => {
     let testBook: Book;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
+      return TestBed.configureTestingModule({
         declarations: [BookDetailsComponent]
-      });
+      }).compileComponents();
+    });
+
+    beforeEach(() => {
       fixture = TestBed.createComponent<BookDetailsComponent>(BookDetailsComponent);
       component = fixture.componentInstance;
       element = fixture.nativeElement as HTMLElement;
