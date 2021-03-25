@@ -1,6 +1,8 @@
 import {BookDetailsComponent} from './book-details.component';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Book} from '../../model/book';
+import { BookService } from '../../services/book.service';
+import { HelperService } from '../../services/helper.service';
 
 describe('BookDetailsComponent', () => {
   describe('(class tests)', () => {
@@ -16,7 +18,9 @@ describe('BookDetailsComponent', () => {
           }
         }
       };
-      const component = new BookDetailsComponent();
+      const helperService = new HelperService();
+      const bookService = new BookService(helperService);
+      const component = new BookDetailsComponent(bookService);
       component.bookChange.subscribe(updatedBook => {
         // then
         expect(eventMock.preventDefault).toHaveBeenCalled();
