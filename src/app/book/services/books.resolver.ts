@@ -5,9 +5,7 @@ import {Book} from '../model/book';
 import {BookService} from './book.service';
 import {catchError} from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class BooksResolver implements Resolve<Observable<Book>> {
 
   constructor(private readonly books: BookService,

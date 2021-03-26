@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Book} from '../model/book';
+import {delay} from 'rxjs/operators';
 
 @Injectable()
 export class BookService {
@@ -29,10 +30,6 @@ export class BookService {
     return this.booksSubject;
   }
 
-  // getBook(bookId: number): Book | undefined {
-  //   return this.books.find(book => book.id === bookId);
-  // }
-
   getOne(bookId: number): Observable<Book> {
     return new Observable<Book>(subscriber => {
       const currentBooks = this.booksSubject.getValue();
@@ -43,7 +40,7 @@ export class BookService {
       } else {
         subscriber.error(`Book with ID ${bookId} could not be found`);
       }
-    });
+    }).pipe(delay(2000));
   }
 
   saveOrUpdate(bookToSaveOrUpdate: Book): Observable<Book> {

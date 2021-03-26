@@ -3,13 +3,14 @@
   <div class="form-group">
     <label for="author">Author</label>
     <input formControlName="author"
-           class="form-control" id="author" />
-    {{bookForm.get('author')?.errors | json}}
+           class="form-control" id="author"/>
+    <ba-errors [of]="bookForm.get('author')"></ba-errors>
   </div>
   <div class="form-group">
     <label for="title">Title</label>
     <input formControlName="title"
-           class="form-control" id="title" />
+           class="form-control" id="title"/>
+    <ba-errors [of]="bookForm.get('title')"></ba-errors>
   </div>
   <button class="btn btn-primary">Save</button>
 </form>

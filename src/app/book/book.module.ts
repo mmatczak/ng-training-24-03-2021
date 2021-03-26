@@ -1,20 +1,10 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {BookDetailsComponent} from './components/book-details/book-details.component';
 import {BookOverviewComponent} from './components/book-overview/book-overview.component';
-import {Route, RouterModule} from '@angular/router';
-import {BooksResolver} from './services/books.resolver';
 import {SharedModule} from '../shared/shared.module';
+import {BookService} from './services/book.service';
+import {BooksResolver} from './services/books.resolver';
 
-const routes: Route[] = [
-  {path: '', component: BookOverviewComponent},
-  {
-    path: 'details', children: [
-      {path: '', component: BookDetailsComponent},
-      {path: ':id', component: BookDetailsComponent, resolve: {book: BooksResolver}}
-    ]
-  }
-];
 
 @NgModule({
   declarations: [BookDetailsComponent, BookOverviewComponent],
@@ -22,9 +12,14 @@ const routes: Route[] = [
     BookOverviewComponent
   ],
   imports: [
-    SharedModule,
-    RouterModule.forChild(routes)
+    SharedModule
   ]
 })
 export class BookModule {
+  static forRoot(): ModuleWithProviders<BookModule> {
+    return {
+      ngModule: BookModule,
+      providers: [BookService, BooksResolver]
+    };
+  }
 }

@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import {Book} from '../../model/book';
 import {BookService} from '../../services/book.service';
 import {Router} from '@angular/router';
+import {delay} from 'rxjs/operators';
 
 @Component({
   selector: 'ba-book-overview',
@@ -17,7 +18,7 @@ export class BookOverviewComponent {
 
   constructor(private readonly books: BookService,
               private readonly router: Router) {
-    this.books$ = books.books$;
+    this.books$ = books.books$.pipe(delay(2000));
   }
 
   selectBook(book: Book): void {

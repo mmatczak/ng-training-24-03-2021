@@ -3,10 +3,13 @@ import {CommonModule} from '@angular/common';
 import {HeaderComponent} from './dialogs/components/header/header.component';
 import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
+import {ErrorsComponent} from './forms/comonents/errors/errors.component';
 
 @NgModule({
-  declarations: [HeaderComponent],
-  exports: [CommonModule, RouterModule, ReactiveFormsModule, HeaderComponent],
+  declarations: [HeaderComponent, ErrorsComponent],
+  exports: [
+    CommonModule, RouterModule, ReactiveFormsModule,
+    HeaderComponent, ErrorsComponent],
   imports: [
     CommonModule, RouterModule
   ]
