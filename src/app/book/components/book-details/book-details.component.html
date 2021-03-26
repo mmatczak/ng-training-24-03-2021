@@ -1,11 +1,15 @@
-<form (submit)="save($event)">
+<form (ngSubmit)="save()"
+      [formGroup]="bookForm">
   <div class="form-group">
     <label for="author">Author</label>
-    <input [value]="book?.author" class="form-control" id="author" />
+    <input formControlName="author"
+           class="form-control" id="author" />
+    {{bookForm.get('author')?.errors | json}}
   </div>
   <div class="form-group">
     <label for="title">Title</label>
-    <input [value]="book?.title" class="form-control" id="title" />
+    <input formControlName="title"
+           class="form-control" id="title" />
   </div>
   <button class="btn btn-primary">Save</button>
 </form>
