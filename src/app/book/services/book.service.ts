@@ -1,63 +1,33 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Book} from '../model/book';
-import {delay} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class BookService {
-  private idSeq = 0;
 
-  private readonly booksSubject: BehaviorSubject<Book[]> = new BehaviorSubject<Book[]>([{
-    id: this.idSeq++,
-    author: 'Marek Matczak',
-    title: 'Angular for nerds'
-  }, {
-    id: this.idSeq++,
-    author: 'Douglas Crockford',
-    title: 'JavaScript. The Good Parts'
-  }, {
-    id: this.idSeq++,
-    author: 'John Example',
-    title: 'TypeScript for newbies'
-  }]);
+  constructor(private readonly httpClient: HttpClient) {
 
-  books$ = this.booksSubject.asObservable();
-
-  constructor() {
   }
 
   getBooks(): Observable<Book[]> {
-    return this.booksSubject;
+    return this.httpClient.get<Book[]>('/api/books');
+    // return this.httpClient.get<Book[]>('/api/books', {
+    //   params:{
+    //     q: 'Marek'
+    //   }
+    // });
   }
 
   getOne(bookId: number): Observable<Book> {
-    return new Observable<Book>(subscriber => {
-      const currentBooks = this.booksSubject.getValue();
-      const foundBook = currentBooks.find(book => book.id === bookId);
-      if (foundBook) {
-        subscriber.next(foundBook);
-        subscriber.complete();
-      } else {
-        subscriber.error(`Book with ID ${bookId} could not be found`);
-      }
-    }).pipe(delay(2000));
+    return this.httpClient.get<Book>(`/api/books/${bookId}`);
   }
 
   saveOrUpdate(bookToSaveOrUpdate: Book): Observable<Book> {
-    return new Observable<Book>(subscriber => {
-      let updatedBook: Book;
-      let updatedBooks: Book[];
-      const currentBooks = this.booksSubject.getValue();
-      if (bookToSaveOrUpdate.id != null) {
-        updatedBook = {...bookToSaveOrUpdate};
-        updatedBooks = currentBooks.map(book => book.id === updatedBook.id ? updatedBook : book);
-      } else {
-        updatedBook = {id: this.idSeq++, ...bookToSaveOrUpdate};
-        updatedBooks = [...currentBooks, updatedBook];
-      }
-      this.booksSubject.next(updatedBooks);
-      subscriber.next(updatedBook);
-      subscriber.complete();
-    });
+    if (bookToSaveOrUpdate.id != null) {
+      return this.httpClient.put<Book>(`/api/books/${bookToSaveOrUpdate.id}`, bookToSaveOrUpdate);
+    } else {
+      return this.httpClient.post<Book>('/api/books', bookToSaveOrUpdate);
+    }
   }
 }

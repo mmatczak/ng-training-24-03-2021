@@ -1,0 +1,24 @@
+{
+  "books": [
+    {
+      "id": 0,
+      "author": "Angular for nerd fsdfsdf",
+      "title": "Marek Matczak "
+    },
+    {
+      "id": 1,
+      "author": "Douglas Crockford",
+      "title": "JavaScript. The Good Parts"
+    },
+    {
+      "id": 2,
+      "author": "Meaing of life",
+      "title": "Tomasz Dyla"
+    },
+    {
+      "author": "dfsdf",
+      "title": "asasf",
+      "id": 3
+    }
+  ]
+}

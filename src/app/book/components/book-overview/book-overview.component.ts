@@ -18,7 +18,7 @@ export class BookOverviewComponent {
 
   constructor(private readonly books: BookService,
               private readonly router: Router) {
-    this.books$ = books.books$.pipe(delay(2000));
+    this.books$ = books.getBooks();
   }
 
   selectBook(book: Book): void {
