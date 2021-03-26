@@ -1,29 +1,24 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import {Component, OnDestroy} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Book} from '../../model/book';
-import { BookService } from '../../services/book.service';
+import {BookService} from '../../services/book.service';
+import {Subject, Subscription} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'ba-book-details',
   templateUrl: './book-details.component.html',
-  styleUrls: ['./book-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./book-details.component.scss']
 })
-export class BookDetailsComponent implements OnInit {
+export class BookDetailsComponent implements OnDestroy {
+  book: Book | undefined;
+  private readonly unsubscribe = new Subject();
 
-  book$: Observable<Book|undefined> | undefined;
-  private bookId: number|undefined;
-
-  constructor(private booksService: BookService, private route: ActivatedRoute){}
-
-  ngOnInit(): void {
-    // this.route.data.subscribe(data=>console.log('data::',data));
-    this.book$ = this.route.data.pipe(map(data=>data.book)
-    )
+  constructor(private readonly books: BookService,
+              private readonly router: Router,
+              route: ActivatedRoute) {
+    this.book = route.snapshot.data.book;
   }
-
 
   save(event: Event): void {
     event.preventDefault();
@@ -33,9 +28,18 @@ export class BookDetailsComponent implements OnInit {
     const titleInput = form.querySelector<HTMLInputElement>('input#title');
     const title = titleInput?.value || '';
     const updatedBook: Book = {
-      id: this.bookId,
+      id: this.book?.id,
       author, title
     };
-    this.booksService.updateBook(updatedBook);
+    this.books.saveOrUpdate(updatedBook)
+      .pipe(
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(() => this.router.navigateByUrl('/books'));
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.unsubscribe();
   }
 }

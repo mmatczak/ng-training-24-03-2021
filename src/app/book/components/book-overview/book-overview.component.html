@@ -1,24 +1,22 @@
-<div class="row">
-  <table class="table col-8">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Author</th>
-        <th scope="col">Title</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        *ngFor="let book of books$ | async; index as i"
-        (click)="selectBook(book)"
-        [class.table-primary]="book === selectedBook"
-        class="my-row"
-      >
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ book.author | uppercase }}</td>
-        <td>{{ book.title | lowercase }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <router-outlet class="col"></router-outlet>
-</div>
+<table class="table">
+  <thead class="thead-dark">
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Author</th>
+    <th scope="col">Title</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr
+    *ngFor="let book of books$ | async; index as i"
+    (click)="selectBook(book)"
+    [class.table-primary]="book === selectedBook"
+    class="my-row"
+  >
+    <th scope="row">{{ i + 1 }}</th>
+    <td>{{ book.author | uppercase }}</td>
+    <td>{{ book.title | lowercase }}</td>
+  </tr>
+  </tbody>
+</table>
+

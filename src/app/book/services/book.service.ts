@@ -1,45 +1,66 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { HelperService } from './helper.service';
-import { Book } from '../model/book';
-import { delay } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Book} from '../model/book';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class BookService {
- private books: Book[] = [{
-    id: 0,
+  private idSeq = 0;
+
+  private readonly booksSubject: BehaviorSubject<Book[]> = new BehaviorSubject<Book[]>([{
+    id: this.idSeq++,
     author: 'Marek Matczak',
     title: 'Angular for nerds'
   }, {
-    id: 1,
+    id: this.idSeq++,
     author: 'Douglas Crockford',
     title: 'JavaScript. The Good Parts'
   }, {
-    id: 2,
+    id: this.idSeq++,
     author: 'John Example',
     title: 'TypeScript for newbies'
-  }];
+  }]);
 
-  private booksSubject: BehaviorSubject<Book[]> = new BehaviorSubject<Book[]>(this.books);
+  books$ = this.booksSubject.asObservable();
 
-  constructor(private helperService: HelperService) { }
+  constructor() {
+  }
 
-  getBooks() : Observable<Book[]>{
+  getBooks(): Observable<Book[]> {
     return this.booksSubject;
   }
 
-  getBook(bookId: number): Book | undefined{
-    return this.books.find(book=>book.id === bookId);
+  // getBook(bookId: number): Book | undefined {
+  //   return this.books.find(book => book.id === bookId);
+  // }
+
+  getOne(bookId: number): Observable<Book> {
+    return new Observable<Book>(subscriber => {
+      const currentBooks = this.booksSubject.getValue();
+      const foundBook = currentBooks.find(book => book.id === bookId);
+      if (foundBook) {
+        subscriber.next(foundBook);
+        subscriber.complete();
+      } else {
+        subscriber.error(`Book with ID ${bookId} could not be found`);
+      }
+    });
   }
 
-  getBookObservable(bookId: number): Observable<Book | undefined>{
-    return of(this.books.find(book=>book.id === bookId)).pipe(delay(3000));
-  }
-
-  updateBook(updatedBook: Book): void{
-    this.books = this.books.map(book => book.id === updatedBook.id ? updatedBook : book);
-    this.booksSubject.next(this.books);
+  saveOrUpdate(bookToSaveOrUpdate: Book): Observable<Book> {
+    return new Observable<Book>(subscriber => {
+      let updatedBook: Book;
+      let updatedBooks: Book[];
+      const currentBooks = this.booksSubject.getValue();
+      if (bookToSaveOrUpdate.id != null) {
+        updatedBook = {...bookToSaveOrUpdate};
+        updatedBooks = currentBooks.map(book => book.id === updatedBook.id ? updatedBook : book);
+      } else {
+        updatedBook = {id: this.idSeq++, ...bookToSaveOrUpdate};
+        updatedBooks = [...currentBooks, updatedBook];
+      }
+      this.booksSubject.next(updatedBooks);
+      subscriber.next(updatedBook);
+      subscriber.complete();
+    });
   }
 }
